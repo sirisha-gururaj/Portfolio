@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #050505;
+  --text-main: #ffffff;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: var(--background);
+  color: var(--text-main);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Keep default scrollbars globally so element-scoped scrollbars render correctly.
+   Hiding scrollbars globally caused the card scrollbar to appear outside the rounded container.
+   We style only the card scrollbar below (.card-scroll). */
+
+/* Custom scrollbar for card content */
+.card-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+  overflow-y: auto;
+  /* ensure the scrollbar doesn't paint outside the rounded card */
+  padding-right: 12px;
+  /* reserve scrollbar gutter so the native scrollbar is placed inside the element
+     instead of overlaying/clipping against the rounded corner */
+  scrollbar-gutter: stable both-edges;
+  box-sizing: content-box;
+  position: relative;
+}
+
+/* Ensure headings inside cards don't sit under the rounded corner */
+.card-scroll {
+  padding-top: 20px;
+}
+
+/* Tweak webkit scrollbar to be inset and respect rounded corners */
+.card-scroll::-webkit-scrollbar {
+  width: 12px;
+}
+.card-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+.card-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 3px solid transparent; /* keep thumb inset */
+  background-clip: padding-box;
+}
+
+.card-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.card-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.12));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.card-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.18));
+}
+
+/* Small visual hint for overflow: a soft top/bottom gradient when scrollable */
+.card-scroll:before,
+.card-scroll:after {
+  content: '';
+  position: sticky;
+  pointer-events: none;
+}
