@@ -5,6 +5,7 @@ import {
   Code, BookOpen, Briefcase, Cpu, Globe, 
   Sparkles, ArrowDownRight, GraduationCap, Award
 } from 'lucide-react';
+import SimpleBackground from './components/SimpleBackground';
 
 // --- SUB-COMPONENTS ---
 
@@ -420,6 +421,7 @@ Implementation
 
   return (
     <div ref={containerRef} className="relative w-full bg-noise animate-aurora">
+      <SimpleBackground />
       {cards.map((card, i) => {
         const stepSize = 1 / cards.length;
         const targetScale = 1 - ( (cards.length - i) * 0.05); 

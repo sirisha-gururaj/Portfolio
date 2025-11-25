@@ -1,0 +1,28 @@
+.simple-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(99,102,241,0.14), transparent 10%),
+    radial-gradient(circle at 80% 80%, rgba(14,165,233,0.08), transparent 14%),
+    linear-gradient(120deg, rgba(99,102,241,0.04), rgba(168,85,247,0.02));
+  background-size: 120% 120%, 120% 120%, 200% 200%;
+  background-position: 0% 0%, 100% 100%, 50% 50%;
+  mix-blend-mode: screen;
+  opacity: 0.95;
+  animation: bgShift 14s linear infinite;
+}
+
+@keyframes bgShift {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+    transform: translateZ(0);
+  }
+  50% {
+    background-position: 20% 30%, 80% 60%, 40% 60%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+}
