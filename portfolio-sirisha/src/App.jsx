@@ -136,7 +136,7 @@ const Card = ({ i, color, content, progress, range, targetScale, scrollable = tr
             // FIXED: Reduced offset from 20px to 10px for a much tighter stack
             top: `calc(${i * 10}px)` 
           }} 
-          className="flex flex-col relative h-[500px] md:h-[580px] w-[90vw] md:w-[1000px] rounded-[3rem] border-t border-l border-r border-white/12 border-b border-white/6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden origin-top backdrop-blur-3xl transition-colors duration-500 bg-white/5 bg-clip-padding"
+          className="card-surface flex flex-col relative h-[500px] md:h-[580px] w-[90vw] md:w-[1000px] rounded-[3rem] border-t border-l border-r border-white/12 border-b border-white/6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden origin-top backdrop-blur-3xl transition-colors duration-500 bg-white/5 bg-clip-padding"
       >
         <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
@@ -179,7 +179,7 @@ export default function App() {
               <span className="text-xs font-mono text-slate-300 tracking-wider">DESIGN • DEVELOP • DEPLOY</span>
             </div>
             
-            <h1 className="text-[12vw] md:text-[8rem] leading-[0.8] font-black tracking-tighter text-white mix-blend-overlay">
+            <h1 className="hero-title text-[12vw] md:text-[8rem] leading-[0.8] font-black tracking-tighter text-white mix-blend-overlay">
               SIRISHA G
             </h1>
             <p className="mt-6 text-xl md:text-2xl text-slate-300 font-light tracking-wide max-w-2xl mx-auto">

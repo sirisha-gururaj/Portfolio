@@ -85,3 +85,44 @@ html {
   position: sticky;
   pointer-events: none;
 }
+
+/* Mobile-specific tweaks: reduce corner radius and scale headings to avoid overlap/clipping */
+/* Broaden mobile breakpoint to include most phones/tablets in portrait */
+@media (max-width: 768px) {
+  .card-surface {
+    border-radius: 1rem !important;
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  /* Slightly reduce the very large hero title on small screens so it doesn't overflow the rounded corners */
+  .hero-title {
+    font-size: clamp(2.2rem, 10vw, 4.25rem) !important;
+    line-height: 1.0 !important;
+  }
+
+  /* Reduce internal padding so content has more usable space on tiny screens */
+  .card-surface .relative.z-10 {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-top: 2.25rem !important; /* ensure headings are not clipped by rounded corner */
+    padding-bottom: 1.5rem !important;
+  }
+
+  /* Make the live preview iframe wrapper slightly narrower on phone to avoid horizontal clipping */
+  .card-surface .w-72 {
+    width: 18rem !important;
+  }
+
+  /* On small screens, remove the stacked top offset so each card sits flush at top (avoid overlapping headers) */
+  .card-surface {
+    top: 0 !important;
+  }
+
+  /* Ensure headings inside cards are always visible and not hidden under the rounded chrome */
+  .card-surface .relative.z-10 :is(h1, h2, h3) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    display: block;
+  }
+}
