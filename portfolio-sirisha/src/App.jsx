@@ -129,14 +129,13 @@ const Card = ({ i, color, content, progress, range, targetScale, scrollable = tr
     <div ref={container} className="h-screen flex items-start justify-center sticky top-0 perspective-1000">
       <motion.div 
         style={{ 
-          scale, 
-          filter: `blur(${blur})`,
-          opacity, 
-          backgroundColor: color, 
-          // FIXED: Reduced offset from 20px to 10px for a much tighter stack
-          top: `calc(${i * 10}px)` 
-        }} 
-        className="flex flex-col relative h-[500px] md:h-[580px] w-[90vw] md:w-[1000px] rounded-[3rem] border-t border-l border-r border-white/20 border-b border-white/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden origin-top backdrop-blur-3xl transition-colors duration-500"
+            scale, 
+            filter: `blur(${blur})`,
+            opacity, 
+            // FIXED: Reduced offset from 20px to 10px for a much tighter stack
+            top: `calc(${i * 10}px)` 
+          }} 
+          className="flex flex-col relative h-[500px] md:h-[580px] w-[90vw] md:w-[1000px] rounded-[3rem] border-t border-l border-r border-white/12 border-b border-white/6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden origin-top backdrop-blur-3xl transition-colors duration-500 bg-white/5 bg-clip-padding"
       >
         <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
@@ -166,8 +165,7 @@ export default function App() {
       color: "rgba(15, 23, 42, 0.6)", 
       content: (
         <div className="relative h-full flex flex-col items-center justify-center text-center p-6 overflow-hidden">
-          <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[100px]" />
+          {/* hero decorative color blobs removed to match uniform glassmorphism */}
 
           <motion.div 
             initial={{ y: 20, opacity: 0 }} 
@@ -222,16 +220,16 @@ export default function App() {
           </div>
           
           <div className="flex-1 grid grid-cols-2 gap-4 w-full">
-            <div className="bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-lg">
-               <Code className="mb-4 text-indigo-400" />
-               <h3 className="font-bold text-xl">Full Stack</h3>
-               <p className="text-xs text-slate-400 mt-2 leading-relaxed">React, Node.js, Flask, PostgreSQL.<br/>Building scalable web architectures.</p>
-            </div>
-            <div className="bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-md shadow-lg translate-y-8">
-               <Sparkles className="mb-4 text-purple-400" />
-               <h3 className="font-bold text-xl">AI & RAG</h3>
-               <p className="text-xs text-slate-400 mt-2 leading-relaxed">LangChain, Generative AI, Streamlit.<br/>Making data intelligent.</p>
-            </div>
+              <div className="p-6 rounded-3xl backdrop-blur-md">
+                <Code className="mb-4 text-indigo-400" />
+                <h3 className="font-bold text-xl">Full Stack</h3>
+                <p className="text-xs text-slate-400 mt-2 leading-relaxed">React, Node.js, Flask, PostgreSQL.<br/>Building scalable web architectures.</p>
+              </div>
+              <div className="p-6 rounded-3xl backdrop-blur-md translate-y-8">
+                <Sparkles className="mb-4 text-purple-400" />
+                <h3 className="font-bold text-xl">AI & RAG</h3>
+                <p className="text-xs text-slate-400 mt-2 leading-relaxed">LangChain, Generative AI, Streamlit.<br/>Making data intelligent.</p>
+              </div>
           </div>
         </div>
       )
@@ -370,7 +368,7 @@ export default function App() {
              <h2 className="text-4xl md:text-6xl font-bold text-white drop-shadow-md">Research.</h2>
            </div>
            
-           <div className="relative z-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md shadow-xl hover:bg-white/10 transition-colors">
+           <div className="relative z-10 p-8 rounded-3xl bg-transparent backdrop-blur-md">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
                 Review on Digital Twin – A Transformative Journey from Conceptualization to Real-World 
 Implementation
