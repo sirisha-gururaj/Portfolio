@@ -26,13 +26,19 @@ html {
 /* Custom scrollbar for card content */
 .card-scroll {
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(255,255,255,0.12) transparent;
+  /* Make Firefox show a normal thumb instead of a very thin one */
+  scrollbar-width: auto; /* Firefox: auto (thicker) */
+  /* Thumb then track color for Firefox */
+  scrollbar-color: rgba(255,255,255,0.16) rgba(0,0,0,0.05);
   overflow-y: auto;
-  /* ensure the scrollbar doesn't paint outside the rounded card */
-  padding-right: 12px;
+  /* ensure the scrollbar doesn't paint outside the rounded card
+    increase right padding and pull the scrollbar inward so the thumb
+    visually appears inside the rounded corner on browsers that place
+    the scrollbar in the gutter */
+  padding-right: 22px;
+  margin-right: -22px;
   /* reserve scrollbar gutter so the native scrollbar is placed inside the element
-     instead of overlaying/clipping against the rounded corner */
+    instead of overlaying/clipping against the rounded corner */
   scrollbar-gutter: stable both-edges;
   box-sizing: content-box;
   position: relative;
@@ -45,37 +51,24 @@ html {
 
 /* Tweak webkit scrollbar to be inset and respect rounded corners */
 .card-scroll::-webkit-scrollbar {
-  width: 12px;
+  width: 14px;
+  height: 14px;
 }
 .card-scroll::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0,0,0,0.08);
   border-radius: 999px;
+  margin: 6px 0; /* keep thumb inset from ends */
 }
 .card-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.16);
   border-radius: 999px;
-  border: 3px solid transparent; /* keep thumb inset */
+  border: 3px solid rgba(0,0,0,0.0);
   background-clip: padding-box;
-}
-
-.card-scroll::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-.card-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.card-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.12));
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.02);
 }
 
 .card-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.18));
+  background: rgba(255,255,255,0.22);
 }
 
 /* Small visual hint for overflow: a soft top/bottom gradient when scrollable */
@@ -180,4 +173,209 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 /* Slightly soften the internal scrollbar hover look to match the overall feel */
 .card-scroll::-webkit-scrollbar-thumb {
   transition: background var(--t-fast) var(--ease-smooth), box-shadow var(--t-fast) var(--ease-smooth);
+}
+
+/* Additional mobile/responsive fixes to prevent overlap and ensure readable layout
+   These only adjust presentation (sizes, spacing) and do not change app logic. */
+@media (max-width: 480px) {
+  /* Make the hero title much smaller on very small screens so it doesn't overlap */
+  .hero-title {
+    font-size: clamp(1.6rem, 12vw, 3rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.02em;
+    word-break: break-word;
+  }
+
+  /* Ensure the paragraph under the hero title is compact and wraps nicely */
+  .hero-title + p,
+  .card-surface .relative.z-10 p {
+    font-size: clamp(0.95rem, 3.6vw, 1.05rem) !important;
+    line-height: 1.45 !important;
+    margin-top: 0.5rem !important;
+  }
+
+  /* Add more top padding so very large headings don't collide with the rounded corner */
+  .card-surface .relative.z-10 {
+    padding-top: 3.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Narrow the preview iframe wrapper further on very small screens */
+  .card-surface .w-72 {
+    width: 14.5rem !important;
+  }
+
+  /* Reduce the hero badge and helper text sizes so they don't overlap */
+  .card-surface .inline-flex.items-center.gap-2 span,
+  .card-surface .inline-flex.items-center.gap-2 {
+    font-size: 10px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Ensure the scroll hint is positioned lower and visible */
+  .card-surface .absolute.bottom-12 {
+    bottom: 6px !important;
+  }
+}
+
+/* Extra tiny-screen adjustments (very narrow phones) */
+@media (max-width: 360px) {
+  .hero-title {
+    font-size: clamp(1.4rem, 14vw, 2.6rem) !important;
+    line-height: 1.0 !important;
+  }
+
+  .card-surface .relative.z-10 {
+    padding-top: 4rem !important;
+  }
+}
+
+/* Ensure the 3rd card (Education) content fully fits the card on small screens
+   by shrinking typography and spacing. This is presentation-only (CSS) and
+   does not change application logic. */
+@media (max-width: 900px) {
+  /* For the Education card, remove scaling and instead reduce typography and spacing
+     so the whole content fits inside the card without inner scrolling. */
+  .card-surface:nth-of-type(3) .relative.z-10 {
+    overflow: visible !important;
+    transform: none !important;
+    padding-top: 1.25rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .card-surface:nth-of-type(3) h2 {
+    font-size: 1.8rem !important;
+    line-height: 1.04 !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .card-surface:nth-of-type(3) p {
+    font-size: 0.92rem !important;
+    line-height: 1.28 !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  /* compress timeline spacing and markers */
+  .card-surface:nth-of-type(3) .space-y-6 { gap: 0.5rem !important; }
+  .card-surface:nth-of-type(3) .absolute[left\[19px\]] { left: 12px !important; }
+  .card-surface:nth-of-type(3) .absolute.left-\[12px\] { left: 6px !important; }
+  .card-surface:nth-of-type(3) .absolute.w-4.h-4 { width: 10px !important; height: 10px !important; }
+}
+
+@media (max-width: 420px) {
+  .card-surface:nth-of-type(3) .relative.z-10 {
+    transform: none !important;
+    padding-top: 1rem !important;
+  }
+  .card-surface:nth-of-type(3) h2 { font-size: 1.6rem !important; }
+  .card-surface:nth-of-type(3) p { font-size: 0.9rem !important; }
+}
+
+/* Mobile-specific layout fixes for the Education card so its entire content
+   fits inside the card (no inner scroll) and uses the full width instead of
+   being pushed to the right. These are presentation-only changes scoped
+   to the 3rd card. */
+@media (max-width: 480px) {
+  .card-surface:nth-of-type(3) .relative.z-10 {
+    /* Use a compact column layout so content fills the card and doesn't overflow */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    gap: 0.5rem !important;
+    padding-top: 0.6rem !important;
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+    min-height: 0 !important;
+  }
+
+  /* Much smaller heading to guarantee visibility */
+  .card-surface:nth-of-type(3) h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.05 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Timeline items: reduce left padding and make text span wider */
+  .card-surface:nth-of-type(3) .pl-12 { padding-left: 0.6rem !important; }
+  .card-surface:nth-of-type(3) .left-\[19px\] { left: 6px !important; }
+  .card-surface:nth-of-type(3) .left-\[12px\] { left: 3px !important; }
+  .card-surface:nth-of-type(3) .w-4.h-4 { width: 9px !important; height: 9px !important; }
+
+  /* Paragraph smaller and tighter */
+  .card-surface:nth-of-type(3) p {
+    font-size: 0.85rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Reduce vertical spacing between timeline entries */
+  .card-surface:nth-of-type(3) .space-y-6 { gap: 0.4rem !important; }
+
+  /* Ensure timeline item wrapper is compact */
+  .card-surface:nth-of-type(3) .relative.pl-12.group { padding-left: 0.6rem !important; }
+}
+
+/* On small screens show a lightweight faux scrollbar inside the card
+   so users can see that the card is scrollable (non-interactive visual hint). */
+/* Always-visible faux scrollbar inside the card to indicate scrollability.
+   This is a visual hint only (pointer-events:none) and does not block interaction
+   with the real/native scrollbar when present. */
+.card-scroll {
+  position: relative;
+}
+
+.card-scroll::after {
+  content: '';
+  position: absolute;
+  right: 12px; /* place inside rounded edge */
+  top: 12px;
+  bottom: 12px;
+  width: 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  pointer-events: none;
+  z-index: 20;
+  opacity: 1;
+}
+
+.card-scroll::before {
+  /* faux thumb */
+  content: '';
+  position: absolute;
+  right: 12px;
+  width: 10px;
+  height: 72px; /* visible hint height */
+  top: 24px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.16));
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.03);
+  pointer-events: none;
+  z-index: 21;
+}
+
+/* On very small screens make the thumb a bit shorter so it doesn't overlap content */
+@media (max-width: 420px) {
+  .card-scroll::before { height: 60px; right: 10px; }
+  .card-scroll::after { right: 10px; }
+}
+
+/* FINAL OVERRIDE: hide all card scrollbars (native + faux) while keeping scrolling behavior.
+   This makes the internal card area scrollable but visually hides the scrollbar. */
+.card-scroll {
+  scrollbar-width: none !important; /* Firefox */
+}
+.card-scroll::-webkit-scrollbar {
+  display: none !important; /* WebKit */
+  width: 0 !important;
+  height: 0 !important;
+}
+.card-scroll::before,
+.card-scroll::after {
+  display: none !important; /* hide the faux scrollbar hints */
 }
