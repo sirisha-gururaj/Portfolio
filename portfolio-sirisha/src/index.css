@@ -146,3 +146,38 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .card-scroll::-webkit-scrollbar {
   display: block; /* WebKit: restore */
 }
+
+/* Smooth transition helpers: make interactions feel softer without changing logic */
+:root {
+  --ease-smooth: cubic-bezier(.22,.9,.36,1);
+  --t-fast: 220ms;
+  --t-medium: 420ms;
+  --t-slow: 680ms;
+}
+
+/* Card surface visual smoothing */
+.card-surface {
+  transition-property: transform, filter, box-shadow, background-color;
+  transition-duration: var(--t-medium);
+  transition-timing-function: var(--ease-smooth);
+  will-change: transform, filter;
+}
+
+/* Make the live preview iframe transitions smoother and less janky */
+.card-surface iframe {
+  transition: transform var(--t-medium) var(--ease-smooth),
+              filter var(--t-medium) var(--ease-smooth),
+              opacity var(--t-medium) var(--ease-smooth);
+  will-change: transform, filter, opacity;
+}
+
+/* Smooth group hover (the mini browser scale/rotate) */
+.group\/browser {
+  transition: transform var(--t-medium) var(--ease-smooth);
+  will-change: transform;
+}
+
+/* Slightly soften the internal scrollbar hover look to match the overall feel */
+.card-scroll::-webkit-scrollbar-thumb {
+  transition: background var(--t-fast) var(--ease-smooth), box-shadow var(--t-fast) var(--ease-smooth);
+}
