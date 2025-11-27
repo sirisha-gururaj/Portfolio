@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   Github, Linkedin, Mail, ExternalLink, 
@@ -28,7 +28,7 @@ const SocialButton = ({ href, icon, label }) => (
 );
 
 // --- PROJECT CONTENT ---
-const ProjectContent = ({ title, category, tech, desc, link }) => (
+const ProjectContent = ({ title, category, tech, desc, link, embedFallback = false }) => (
   <div className="h-full w-full p-6 md:p-12 flex flex-col justify-center relative overflow-hidden group">
     
     {/* Background Pattern */}
@@ -88,18 +88,25 @@ const ProjectContent = ({ title, category, tech, desc, link }) => (
                    {link}
                  </div>
                </div>
-               <div className="w-full h-full bg-slate-800 relative group-hover/browser:bg-white transition-colors duration-500">
-                 <iframe 
-                   src={link}
-                   className="w-[200%] h-[200%] origin-top-left scale-50 border-none pointer-events-none grayscale-[20%] group-hover/browser:grayscale-0 transition-all duration-500"
-                   loading="lazy"
-                   title="Live Preview"
-                 />
-                 <div className="absolute inset-0 bg-blue-900/20 backdrop-blur-[1px] opacity-0 group-hover/browser:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-black/80 text-white text-xs font-bold px-4 py-2 rounded-full border border-white/20 shadow-lg flex items-center gap-2 transform translate-y-4 group-hover/browser:translate-y-0 transition-transform">
-                      Visit Live <ExternalLink size={12}/>
-                    </span>
-                 </div>
+               <div className="w-full h-full bg-slate-800 relative group-hover/browser:bg-white transition-colors duration-500 flex items-center justify-center">
+                 {embedFallback ? (
+                   <ProjectIframePreview link={link} />
+                 ) : (
+                  (() => {
+                    const fittableHosts = ['slotswapper', 'restaurant-mangement', 'restaurant-mangement-app-frontend'];
+                    const isFittable = typeof link === 'string' && fittableHosts.some(h => link.includes(h));
+                    return isFittable ? (
+                      <SlotIframeFitter link={link} />
+                    ) : (
+                      <iframe
+                        src={link}
+                        className="w-[200%] h-[200%] origin-top-left scale-50 border-none pointer-events-none grayscale-[20%] group-hover/browser:grayscale-0 transition-all duration-500"
+                        loading="lazy"
+                        title="Live Preview"
+                      />
+                    );
+                  })()
+                 )}
                </div>
             </div>
          </a>
@@ -108,6 +115,47 @@ const ProjectContent = ({ title, category, tech, desc, link }) => (
     </div>
   </div>
 );
+
+// Small helper component: tries to load an iframe and falls back to a friendly button if embedding is blocked
+function ProjectIframePreview({ link }) {
+  const [embedAllowed, setEmbedAllowed] = useState(null); // null = pending, true = loaded, false = blocked
+  const iframeRef = useRef(null);
+
+  useEffect(() => {
+    let t = setTimeout(() => {
+      if (embedAllowed === null) setEmbedAllowed(false);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [embedAllowed]);
+
+  function handleLoad() {
+    setEmbedAllowed(true);
+  }
+
+  if (embedAllowed === false) {
+    return (
+      <div className="w-72 h-48 flex items-center justify-center">
+        <div className="text-center px-4">
+          <p className="text-sm text-slate-300 mb-3">Preview unavailable</p>
+          <a href={link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full font-bold shadow">
+            Open Live <ExternalLink size={14} />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <iframe
+      ref={iframeRef}
+      src={link}
+      onLoad={handleLoad}
+      className={`w-[200%] h-[200%] origin-top-left scale-50 border-none transition-all duration-500 ${embedAllowed === true ? 'pointer-events-auto grayscale-0' : 'pointer-events-none grayscale-[20%]'}`}
+      loading="lazy"
+      title="Live Preview"
+    />
+  );
+}
 
 // --- MAIN CARD COMPONENT ---
 const Card = ({ i, color, content, progress, range, targetScale, scrollable = true }) => {
@@ -307,6 +355,7 @@ export default function App() {
           tech={["Python", "LangChain", "RAG"]}
           desc="An intelligent campus guide. Uses Local RAG + Web Search fallback to answer queries instantly."
           link="https://sirisha-gururaj-project-app-kiounk.streamlit.app/"
+          embedFallback={true}
         />
       )
     },
@@ -315,10 +364,10 @@ export default function App() {
       id: "certifications",
       color: "rgba(17, 24, 39, 0.9)", // Dark Gray Glass
       content: (
-        <div className="h-full p-6 md:p-10 flex flex-col justify-center">
+        <div className="h-full p-6 md:p-10 flex flex-col justify-center items-center text-center">
            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 drop-shadow-md">Certifications.</h2>
            
-           <div className="grid gap-4 max-w-3xl relative z-10">
+           <div className="grid gap-4 max-w-3xl relative z-10 grid-cols-1 md:grid-cols-2 mx-auto">
              {/* Cert 1: Internship */}
              <a href="https://drive.google.com/file/d/1hhIEc1SJHJMpZ58_rFsbAny_4p63fnCw/view" target="_blank" rel="noopener noreferrer" className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all hover:scale-[1.02] backdrop-blur-md cursor-pointer">
                <div className="p-3 rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/50">
@@ -353,6 +402,42 @@ export default function App() {
                  <p className="text-xs text-slate-400 mt-1">Certification Authority</p>
                </div>
                <ExternalLink className="ml-auto text-white/20 group-hover:text-purple-400 transition-colors" size={18} />
+             </a>
+
+             {/* New Cert: AI & ML Fundamentals */}
+             <a href="https://drive.google.com/file/d/10mBfRNMfKRgLarkQHbRA3uKok0J59RUy/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all hover:scale-[1.02] backdrop-blur-md cursor-pointer">
+               <div className="p-3 rounded-full bg-indigo-500/20 text-indigo-400 ring-1 ring-indigo-500/50">
+                 <Award size={24} />
+               </div>
+               <div>
+                 <h3 className="font-bold text-white text-lg group-hover:text-indigo-300 transition-colors">Artificial Intelligence and Machine Learning Fundamentals</h3>
+                 <p className="text-xs text-slate-400 mt-1">Certificate</p>
+               </div>
+               <ExternalLink className="ml-auto text-white/20 group-hover:text-indigo-300 transition-colors" size={18} />
+             </a>
+
+             {/* New Cert: JSP Web Apps */}
+             <a href="https://drive.google.com/file/d/19v-bu24ELbd1sbNzc0AAU7pUG2S3EbPZ/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all hover:scale-[1.02] backdrop-blur-md cursor-pointer">
+               <div className="p-3 rounded-full bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/50">
+                 <Award size={24} />
+               </div>
+               <div>
+                 <h3 className="font-bold text-white text-lg group-hover:text-amber-300 transition-colors">Building Web Applications with JSP: Integrating a JSP App with a Database</h3>
+                 <p className="text-xs text-slate-400 mt-1">Certificate</p>
+               </div>
+               <ExternalLink className="ml-auto text-white/20 group-hover:text-amber-300 transition-colors" size={18} />
+             </a>
+
+             {/* New Cert: Cybersecurity */}
+             <a href="https://drive.google.com/file/d/1J2AxRP5UhdSJgGEacLGNFhQT79-omzX8/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all hover:scale-[1.02] backdrop-blur-md cursor-pointer">
+               <div className="p-3 rounded-full bg-red-500/20 text-red-400 ring-1 ring-red-500/50">
+                 <Award size={24} />
+               </div>
+               <div>
+                 <h3 className="font-bold text-white text-lg group-hover:text-red-300 transition-colors">Fundamentals of Cybersecurity</h3>
+                 <p className="text-xs text-slate-400 mt-1">Certificate</p>
+               </div>
+               <ExternalLink className="ml-auto text-white/20 group-hover:text-red-300 transition-colors" size={18} />
              </a>
            </div>
         </div>
@@ -438,6 +523,54 @@ Implementation
           />
         );
       })}
+    </div>
+  );
+}
+
+// SlotSwapper fitter: scales a fixed-size iframe down so the full site fits the preview box
+function SlotIframeFitter({ link }) {
+  const containerRef = useRef(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+    const ro = new ResizeObserver(() => {
+      const r = el.getBoundingClientRect();
+      setSize({ w: r.width, h: r.height });
+    });
+    ro.observe(el);
+    // initial
+    const r = el.getBoundingClientRect();
+    setSize({ w: r.width, h: r.height });
+    return () => ro.disconnect();
+  }, []);
+
+  // assume the site is designed at a typical desktop viewport size; scale down to fit
+  const BASE_W = 1280;
+  const BASE_H = 720;
+  const scale = Math.min(1, size.w > 0 ? size.w / BASE_W : 1, size.h > 0 ? size.h / BASE_H : 1);
+
+  return (
+    <div ref={containerRef} className="w-full h-full relative overflow-hidden" style={{ padding: 0 }}>
+      <iframe
+        src={link}
+        loading="lazy"
+        title="Live Preview"
+        style={{
+          width: `${BASE_W}px`,
+          height: `${BASE_H}px`,
+          border: 'none',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          pointerEvents: 'none',
+          margin: 0,
+          display: 'block',
+        }}
+      />
     </div>
   );
 }
