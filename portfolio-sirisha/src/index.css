@@ -126,3 +126,23 @@ html {
     display: block;
   }
 }
+
+/* Hide the main page scrollbar but keep internal element scrollbars (like .card-scroll) visible.
+   This preserves page scrolling while removing the visible browser scrollbar shown at the right. */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* WebKit browsers */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure our card-specific scrollbars still render (override hiding above) */
+.card-scroll {
+  scrollbar-width: thin; /* Firefox: restore */
+}
+.card-scroll::-webkit-scrollbar {
+  display: block; /* WebKit: restore */
+}
