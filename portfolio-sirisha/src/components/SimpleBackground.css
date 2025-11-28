@@ -1,5 +1,6 @@
 .simple-bg {
-  position: absolute;
+  /* keep the decorative background fixed to the viewport so it doesn't move with cards */
+  position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
@@ -10,8 +11,9 @@
   background-size: 120% 120%, 120% 120%, 200% 200%;
   background-position: 0% 0%, 100% 100%, 50% 50%;
   mix-blend-mode: screen;
-  opacity: 0.95;
-  animation: bgShift 14s linear infinite;
+  /* slightly reduced so particles have better contrast */
+  opacity: 0.88;
+  /* background is intentionally static (no animation) so only particles move */
 }
 
 @keyframes bgShift {
@@ -25,4 +27,20 @@
   100% {
     background-position: 0% 0%, 100% 100%, 50% 50%;
   }
+}
+
+/* Ensure the particles canvas fills the background and remains non-interactive */
+#particles-js canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  pointer-events: none;
+}
+
+#particles-js {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
