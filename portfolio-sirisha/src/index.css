@@ -379,3 +379,94 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .card-scroll::after {
   display: none !important; /* hide the faux scrollbar hints */
 }
+
+/* Ensure cards expand and show all content on small screens instead of enforcing fixed heights
+   and inner scrollbars. This makes cards use their content height and avoids clipped text.
+   These rules only affect small viewports and are presentation-only. */
+@media (max-width: 900px) {
+  .card-surface {
+    /* let the card size itself to its content on mobile */
+    height: auto !important;
+    min-height: 100vh !important; /* keep the full-viewport feel while allowing expansion */
+    width: calc(100% - 24px) !important;
+    max-width: 960px !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Disable internal scrolling so card content is visible and laid out naturally */
+  .card-surface .relative.z-10 {
+    overflow: visible !important;
+    height: auto !important;
+    -webkit-overflow-scrolling: auto !important;
+    padding-bottom: 2.25rem !important;
+  }
+
+  /* Reduce extreme heading sizes inside cards so they wrap instead of overflowing */
+  .card-surface h1, .card-surface h2, .card-surface h3 {
+    font-size: clamp(1.25rem, 5.5vw, 2.6rem) !important;
+    line-height: 1.08 !important;
+    word-break: break-word;
+  }
+
+  /* Ensure the hero title remains large but not overflowing on small devices */
+  .hero-title {
+    font-size: clamp(2rem, 10vw, 4rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  /* Make the iframe preview wrapper collapse gracefully on small screens */
+  .card-surface .w-72 {
+    width: 100% !important;
+    max-width: 420px !important;
+    height: auto !important;
+  }
+}
+
+/* Specific hero card layout fixes on small screens: center content vertically
+   and ensure it uses full card space without overlapping rounded corners. */
+@media (max-width: 900px) {
+  .card-surface:nth-of-type(1) .relative.z-10 {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    height: 100% !important;
+    overflow: visible !important;
+    padding-top: 2rem !important;
+    padding-bottom: 3.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .card-surface:nth-of-type(1) .hero-title {
+    font-size: clamp(2.2rem, 12vw, 4.25rem) !important;
+    line-height: 1.02 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    word-break: break-word !important;
+  }
+
+  .card-surface:nth-of-type(1) .hero-title + p {
+    max-width: 100% !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  /* Keep the scroll hint visible but not overlapping the hero content */
+  .card-surface:nth-of-type(1) .absolute.bottom-12 {
+    bottom: 1.25rem !important;
+  }
+}
+
+/* Prevent the decorative 'Scroll to Explore' hint from overlapping hero text
+   on small screens by hiding it — the page still scrolls normally. */
+@media (max-width: 900px) {
+  .card-surface:nth-of-type(1) .absolute.bottom-12 {
+    display: none !important;
+  }
+}

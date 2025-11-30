@@ -15,17 +15,41 @@ const TechBadge = ({ children }) => (
   </span>
 );
 
-const SocialButton = ({ href, icon, label }) => (
-  <a 
-    href={href} 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="group flex items-center gap-3 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all duration-300 backdrop-blur-md"
-  >
-    {icon}
-    <span className="text-sm font-bold tracking-wide group-hover:text-blue-300 transition-colors">{label}</span>
-  </a>
-);
+const SocialButton = ({ href, icon, label }) => {
+  const isMail = typeof href === 'string' && href.startsWith('mailto:');
+  // If this is a mailto link, convert it to a Gmail compose URL so it
+  // always opens a prefilled Gmail compose in a new tab.
+  const finalHref = isMail
+    ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(href.replace(/^mailto:/i, ''))}`
+    : href;
+
+  // Ensure the icon receives the hover color. If the passed `icon` is a
+  // valid React element (lucide icon), clone it and attach classes that
+  // transition its color on group hover.
+  let renderedIcon = icon;
+  try {
+    if (React.isValidElement(icon)) {
+      const existing = icon.props?.className || '';
+      const added = `${existing} text-white/80 transition-colors group-hover:text-blue-300`.trim();
+      renderedIcon = React.cloneElement(icon, { className: added });
+    }
+  } catch (e) {
+    // fallback: render the icon as-is
+    renderedIcon = icon;
+  }
+
+  return (
+    <a
+      href={finalHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-3 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all duration-300 backdrop-blur-md"
+    >
+      {renderedIcon}
+      <span className="text-sm font-bold tracking-wide group-hover:text-blue-300 transition-colors">{label}</span>
+    </a>
+  );
+};
 
 // --- PROJECT CONTENT ---
 const ProjectContent = ({ title, category, tech, desc, link, embedFallback = false }) => (
